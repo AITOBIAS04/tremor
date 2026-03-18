@@ -1,0 +1,27 @@
+{
+  "name": "@echelon/tremor",
+  "version": "0.1.0",
+  "description": "Seismic intelligence construct for the Echelon prediction market framework",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "poll": "node src/oracles/usgs.js",
+    "test": "node --test test/**/*.test.js",
+    "lint": "eslint src/ test/"
+  },
+  "keywords": [
+    "echelon",
+    "constructs",
+    "seismic",
+    "prediction-market",
+    "osint",
+    "usgs",
+    "brier-score"
+  ],
+  "author": "El Capitan",
+  "license": "AGPL-3.0",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
