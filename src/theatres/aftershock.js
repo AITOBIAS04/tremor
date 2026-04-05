@@ -122,7 +122,13 @@ function logFactorial(n) {
 
 /**
  * Infer tectonic regime from depth and location.
- * Rough heuristic — in production use a proper tectonic regionalization.
+ *
+ * TBD: empirical calibration needed — all depth thresholds (30/50/100 km)
+ * and bounding-box bounds below are rough engineering heuristics, not
+ * sourced from a tectonic regionalization dataset. In production this
+ * should be replaced with a proper regionalization (e.g. Hayes et al.
+ * Slab2 for subduction zones, PB2002 plate boundaries for transform).
+ * See empirical validation audit.
  */
 function inferRegime(depth_km, lat, lon) {
   if (depth_km > 100) return 'subduction';
@@ -172,12 +178,18 @@ export function createAftershockCascade({
   const expectedCount = omoriExpectedCount(params, mainMag, threshold_mag, window_hours);
   const initialProbs = countToBucketProbabilities(expectedCount);
 
-  // Rupture length estimate for spatial matching (Wells & Coppersmith 1994)
-  // log10(L) = -3.22 + 0.69*M → L in km
+  // Rupture length estimate for spatial matching.
+  // source: Wells & Coppersmith (1994), "New Empirical Relationships
+  // among Magnitude, Rupture Length, Rupture Width, Rupture Area, and
+  // Surface Displacement", BSSA 84(4). log10(L) = -3.22 + 0.69*M → L in km.
   const ruptureLength = Math.pow(10, -3.22 + 0.69 * mainMag);
-  const matchRadius = ruptureLength * 1.5; // 1.5× rupture length
+  // TBD: empirical calibration needed — the 1.5× match-radius multiplier
+  // is an engineering heuristic; see empirical validation audit.
+  const matchRadius = ruptureLength * 1.5;
 
-  // Convert to approximate degree radius
+  // Convert km → degrees using the small-angle approximation
+  // (~111 km per degree of latitude). TBD: empirical calibration needed —
+  // ignores longitude compression at high latitudes.
   const degreeRadius = matchRadius / 111;
 
   return {
@@ -289,11 +301,16 @@ export function processAftershockCascade(theatre, bundle) {
   const remaining = Math.max(1, (theatre.closes_at - Date.now()) / (1000 * 60 * 60));
   const totalWindow = (theatre.closes_at - theatre.opens_at) / (1000 * 60 * 60);
 
-  // Observed rate extrapolation
+  // Observed rate extrapolation.
+  // TBD: empirical calibration needed — the 0.7 Omori-decay correction
+  // and the blending formula below are engineering heuristics; see
+  // empirical validation audit.
   const rate = elapsed > 0 ? newCount / elapsed : newCount;
-  const projectedTotal = newCount + rate * remaining * 0.7; // 0.7 = Omori decay correction
+  const projectedTotal = newCount + rate * remaining * 0.7;
 
-  // Blend Omori prior with observed projection
+  // Blend Omori prior with observed projection.
+  // TBD: empirical calibration needed — the 0.1 blending floor ensures the
+  // Omori prior never fully disappears, but the specific value is unsourced.
   const omoriWeight = Math.max(0.1, 1 - (elapsed / totalWindow));
   const obsWeight = 1 - omoriWeight;
   const blendedExpected =

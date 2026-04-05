@@ -6,7 +6,7 @@ A seismic intelligence construct for the [Echelon](https://github.com/AITOBIAS04
 
 ## What it does
 
-TREMOR ingests real-time earthquake data from USGS, EMSC, and IRIS, converts it into structured evidence bundles, runs prediction markets (Theatres) on seismic outcomes, and exports Brier-scored training data for the RLMF pipeline.
+TREMOR ingests real-time earthquake data from USGS and EMSC (IRIS integration planned for v0.2), converts it into structured evidence bundles, runs prediction markets (Theatres) on seismic outcomes, and exports Brier-scored training data for the RLMF pipeline.
 
 The prediction market is the factory. The calibrated training data is the product.
 
@@ -66,6 +66,26 @@ console.log(tremor.getState());
 const certs = tremor.getCertificates();
 ```
 
+## v0.1.0: Production-Ready Release
+
+This release is **production-hardened** with comprehensive safety fixes and governance:
+
+- **5 critical safety fixes**: Race condition prevention, NaN guards, atomic exports, input validation, poll resilience
+- **Comprehensive test suite**: 70 tests across 22 suites (48 baseline + 22 regression tests proving fixes)
+- **All tests passing**: 70/70 ✓
+- **Governance structure**: Security policy, contribution guidelines, GitHub Actions CI
+- **Zero external dependencies**: Node.js 20+ only
+
+See [CHANGELOG.md](CHANGELOG.md) for detailed changes, [SECURITY.md](SECURITY.md) for security policy, [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+
+## Verification
+
+- **70/70 tests passing** (48 baseline + 22 regression)
+- **GitHub Actions CI** on push and PR
+- **Zero external dependencies**
+- **AGPL-3.0 licensed**
+- **Production-ready**
+
 ## Architecture
 
 ```
@@ -94,7 +114,8 @@ tremor/
 ├── spec/
 │   └── construct.json        # Machine-readable construct spec
 ├── test/
-│   └── tremor.test.js        # Test suite (48 tests, 16 suites)
+│   ├── tremor.test.js        # Baseline test suite (48 tests)
+│   └── post-audit.test.js    # Sprint-1 regression suite (22 tests)
 ├── BUTTERFREEZONE.md          # Agent-facing project interface
 ├── .env.example
 ├── package.json

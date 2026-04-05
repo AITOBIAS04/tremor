@@ -57,8 +57,35 @@ export async function crossValidateEMSC(feature) {
       };
     }
 
+    // Oracle-layer schema validation (sprint 1d). Reject any EMSC feature
+    // missing the fields we need for divergence math before the reduce, so
+    // a malformed response surfaces as a structured warning rather than a
+    // NaN divergence downstream.
+    const validEmscFeatures = data.features.filter((f) => {
+      const fp = f?.properties ?? {};
+      if (!Number.isFinite(fp.mag)) {
+        console.warn(`[TREMOR:EMSC] reject event=${f?.id ?? 'unknown'} reason=mag_not_finite`);
+        return false;
+      }
+      if (!Number.isFinite(fp.time)) {
+        console.warn(`[TREMOR:EMSC] reject event=${f?.id ?? 'unknown'} reason=time_missing`);
+        return false;
+      }
+      return true;
+    });
+
+    if (validEmscFeatures.length === 0) {
+      return {
+        sources_checked: ['EMSC'],
+        magnitude_readings: { USGS: props.mag },
+        max_divergence: 0,
+        paradox_flag: false,
+        matched: false,
+      };
+    }
+
     // Take the closest match by time
-    const bestMatch = data.features.reduce((best, f) => {
+    const bestMatch = validEmscFeatures.reduce((best, f) => {
       const timeDiff = Math.abs(f.properties.time - props.time);
       if (!best || timeDiff < best._timeDiff) {
         return { ...f, _timeDiff: timeDiff };
@@ -68,6 +95,12 @@ export async function crossValidateEMSC(feature) {
 
     const emscMag = bestMatch.properties.mag;
     const usgsMag = props.mag;
+    if (!Number.isFinite(usgsMag) || !Number.isFinite(emscMag)) {
+      console.warn(
+        `[TREMOR:EMSC] reject event=${feature?.id ?? 'unknown'} reason=non_finite_magnitudes`,
+      );
+      return null;
+    }
     const divergence = Math.abs(usgsMag - emscMag);
 
     return {

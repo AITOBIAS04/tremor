@@ -1,7 +1,7 @@
 <!-- AGENT-CONTEXT
 name: tremor
 type: construct
-purpose: Seismic intelligence construct for the Echelon prediction market framework. Ingests USGS/EMSC/IRIS real-time earthquake feeds, builds evidence bundles, runs binary and multi-class prediction markets (Theatres), and exports Brier-scored RLMF training data.
+purpose: Seismic intelligence construct for the Echelon prediction market framework. Ingests USGS and EMSC real-time earthquake feeds (IRIS integration planned for v0.2), builds evidence bundles, runs binary and multi-class prediction markets (Theatres), and exports Brier-scored RLMF training data.
 key_files: [src/index.js, src/processor/bundles.js, src/oracles/usgs.js, spec/construct.json, src/skills/seismic.md]
 interfaces:
   core: [TremorConstruct, pollAndIngest, buildBundle, exportCertificate]
@@ -159,15 +159,27 @@ Directory structure:
 | `src/rlmf/` | 1 | RLMF training data export (Brier scoring, temporal analysis, certificate generation) |
 | `src/skills/` | 1 | Construct specialization profile |
 | `spec/` | 1 | Machine-readable construct specification |
-| `test/` | 1 | Test suite (48 tests, 16 suites, node:test) |
+| `test/` | 2 | Baseline + regression test suites (70 tests, 22 suites, node:test) |
 
 ## Verification
 <!-- provenance: CODE-FACTUAL -->
 
-- Trust Level: **L1 — Local**
-- 48 tests across 16 suites (node --test, zero dependencies)
+- Trust Level: **L2 — CI Verified**
+- 70 tests across 22 suites (48 baseline + 22 regression)
+- CI/CD: GitHub Actions (test, lint, build on push/PR)
+- Security: SECURITY.md present
+- Governance: CONTRIBUTING.md, CHANGELOG.md present
 - Zero external dependencies (Node.js 20+ built-in fetch + test runner)
 - All OSINT sources are public, free, and require no authentication
+
+## Governance
+<!-- provenance: OPERATIONAL -->
+
+- **SECURITY.md**: Vulnerability disclosure policy, response timeline
+- **CONTRIBUTING.md**: Feature requests, bug reports, testing requirements
+- **CHANGELOG.md**: v0.1.0 release notes, known gaps, v0.2 roadmap
+- **GitHub Actions**: CI/CD pipelines (test, lint, build)
+- **Zero new dependencies**: Hard constraint (maintained)
 
 ## Culture
 <!-- provenance: OPERATIONAL -->
@@ -211,7 +223,7 @@ sections:
   architecture: pipeline-oracle-processor-theatre-rlmf
   interfaces: construct-api-theatre-templates-osint-feeds
   module_map: 7-modules
-  verification: 48-tests-16-suites
+  verification: 70-tests-22-suites-ci-verified
   culture: echelon-ground-truth-first
   quick_start: zero-deps-node20
 -->

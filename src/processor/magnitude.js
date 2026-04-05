@@ -48,24 +48,61 @@ const DENSITY_MULTIPLIER = {
  */
 export function buildMagnitudeUncertainty(feature) {
   const { properties: props, geometry } = feature;
-  const mag = props.mag ?? 0;
+
+  // Fail-closed on Brier-critical upstream fields (sprint 1b).
+  // `mag` feeds thresholdCrossingProbability() and every Brier computation
+  // downstream. If it is missing or non-finite, the entire bundle must be
+  // rejected — silent fallback to 0 would launder bogus confidence.
+  if (!Number.isFinite(props.mag)) {
+    throw new NonFiniteMagnitudeError(
+      `magnitude.mag is not finite (event=${feature.id}, got=${props.mag})`,
+    );
+  }
+  if (
+    !geometry ||
+    !Array.isArray(geometry.coordinates) ||
+    geometry.coordinates.length < 2 ||
+    !Number.isFinite(geometry.coordinates[0]) ||
+    !Number.isFinite(geometry.coordinates[1])
+  ) {
+    throw new NonFiniteMagnitudeError(
+      `geometry.coordinates missing or non-finite (event=${feature.id})`,
+    );
+  }
+
+  const mag = props.mag;
   const magType = props.magType ?? 'unknown';
-  const reportedError = props.magError ?? null;
-  const magNst = props.magNst ?? null;
+  // For reportedError and magNst, treat undefined, null, or non-finite the
+  // same way (as "not provided"). These are optional refinements, not
+  // core uncertainty inputs.
+  const reportedError =
+    Number.isFinite(props.magError) && props.magError > 0 ? props.magError : null;
+  const magNst =
+    Number.isFinite(props.magNst) && props.magNst > 0 ? props.magNst : null;
   const status = props.status;
 
   const region = findRegion(geometry.coordinates[0], geometry.coordinates[1]);
 
   // Base uncertainty from magnitude type
+  // source: empirical 1-sigma ranges for USGS magnitude types; Mw (moment)
+  // is gold standard ~0.10, Md (duration) least reliable ~0.35. See
+  // MAG_TYPE_UNCERTAINTY table above for full breakdown.
+  // TBD: empirical calibration needed — regional catalog refit vs review
+  // deltas; see empirical validation audit.
   let estimatedError = MAG_TYPE_UNCERTAINTY[magType] ?? 0.25;
 
-  // Use USGS-reported error if available (floor at half of type baseline)
-  if (reportedError !== null && reportedError > 0) {
+  // Use USGS-reported error if available (floor at half of type baseline).
+  // TBD: empirical calibration needed — half-baseline floor factor is an
+  // engineering heuristic, not sourced. See empirical validation audit.
+  if (reportedError !== null) {
     estimatedError = Math.max(reportedError, estimatedError * 0.5);
   }
 
-  // Adjust for station count used in magnitude computation
-  if (magNst !== null && magNst > 0) {
+  // Adjust for station count used in magnitude computation.
+  // Station-count formula (1.5 − 0.5·min(1, nst/20)) and the missing-nst
+  // ×1.3 penalty are TBD: empirical calibration needed — see empirical
+  // validation audit.
+  if (magNst !== null) {
     const stationFactor = Math.min(1, magNst / 20);
     estimatedError *= 1.5 - (0.5 * stationFactor);
   } else {
@@ -75,13 +112,33 @@ export function buildMagnitudeUncertainty(feature) {
   // Adjust for regional network density
   estimatedError *= DENSITY_MULTIPLIER[region.density_grade] ?? 1.0;
 
-  // Reviewed events have lower effective uncertainty
+  // Reviewed events have lower effective uncertainty.
+  // Apply ONLY when status is explicitly 'reviewed' — do not apply when
+  // status is missing/undefined (that would silently reward absent data).
+  // TBD: empirical calibration needed — 0.7 factor is engineering judgement.
   if (status === 'reviewed') {
     estimatedError *= 0.7;
   }
 
-  // Doubt price: 0-1 normalized
+  // At this point estimatedError MUST be finite and positive. Anything else
+  // means upstream data corrupted the computation path — fail closed.
+  if (!Number.isFinite(estimatedError) || estimatedError <= 0) {
+    throw new NonFiniteMagnitudeError(
+      `estimated_error collapsed to non-finite/non-positive value ` +
+      `(event=${feature.id}, value=${estimatedError})`,
+    );
+  }
+
+  // Doubt price: 0-1 normalized.
+  // TBD: empirical calibration needed — 0.5 ceiling normalization; see
+  // empirical validation audit.
   const doubtPrice = Math.min(1, estimatedError / 0.5);
+
+  if (!Number.isFinite(doubtPrice) || doubtPrice < 0 || doubtPrice > 1) {
+    throw new NonFiniteMagnitudeError(
+      `doubt_price out of range [0,1] (event=${feature.id}, value=${doubtPrice})`,
+    );
+  }
 
   // 95% confidence interval
   const ci95 = estimatedError * 1.96;
@@ -97,6 +154,19 @@ export function buildMagnitudeUncertainty(feature) {
       round2(mag + ci95),
     ],
   };
+}
+
+/**
+ * Thrown when a core uncertainty input is missing or non-finite. Callers
+ * (buildBundle, oracles) must catch this and reject the bundle rather than
+ * substituting fallback math — silent fallback is how bogus confidence
+ * gets laundered into clean-looking output.
+ */
+export class NonFiniteMagnitudeError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'NonFiniteMagnitudeError';
+  }
 }
 
 /**

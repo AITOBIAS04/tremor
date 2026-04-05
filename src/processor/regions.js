@@ -11,6 +11,15 @@
  * median nst and median gap for M4.5+ events over the last 5 years.
  */
 
+// ---------------------------------------------------------------------
+// All REGION_PROFILES fields (median_nst, median_gap, baseline_rms,
+// density_grade), DEFAULT_REGION fallback, and the DENSITY_NORM table
+// below are TBD: empirical calibration needed — see empirical validation
+// audit. In production these should be refit from historical catalog
+// stats per region (median nst/gap for M4.5+ events over the last 5
+// years). The current values are rough engineering estimates used as a
+// placeholder pending that refit. Do not tune without empirical backing.
+// ---------------------------------------------------------------------
 export const REGION_PROFILES = [
   {
     name: 'US West Coast',

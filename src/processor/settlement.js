@@ -12,6 +12,20 @@
  * 7-day hard expiry for events that never get reviewed.
  */
 
+// ---------------------------------------------------------------------
+// Settlement-tier time constants and brier_discount values below are
+// TBD: empirical calibration needed — see empirical validation audit.
+//
+// - TWO_HOURS: minimum age before an automatic event can be treated as
+//   "provisional mature" (engineering heuristic; USGS typically promotes
+//   to 'reviewed' within hours to days).
+// - ONE_HOUR: revision-stability window and theatre-expiring guard.
+// - SEVEN_DAYS: hard expiry for events that never reach 'reviewed'.
+// - composite > 0.5 quality gate (below) and the three brier_discount
+//   values (0.10 / 0.20 / 0.25) are also TBD: empirical calibration
+//   needed. Discounts currently encode "how much to penalize a Brier
+//   score when resolving against less-than-gold-standard evidence".
+// ---------------------------------------------------------------------
 const TWO_HOURS = 2 * 60 * 60;
 const ONE_HOUR = 60 * 60;
 const SEVEN_DAYS = 7 * 24 * 60 * 60;

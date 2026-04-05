@@ -49,7 +49,13 @@ export function computeQuality(feature) {
   const [lon, lat] = geometry.coordinates;
   const region = findRegion(lon, lat);
 
-  // Status weight — biggest single factor
+  // ---------------------------------------------------------------------
+  // statusWeights, composite weights, and missing-value defaults below are
+  // TBD: empirical calibration needed — see empirical validation audit.
+  // Values are engineering defaults, not derived from a historical catalog
+  // refit. Do not tune without an empirical backing; that is a separate
+  // sprint.
+  // ---------------------------------------------------------------------
   const statusWeights = {
     reviewed: 1.0,
     automatic: 0.4,
@@ -63,7 +69,9 @@ export function computeQuality(feature) {
   const stationScore = normalizeStationCount(props.nst, region);
   const networkDensityNorm = DENSITY_NORM[region.density_grade] ?? 0.5;
 
-  // Weighted composite
+  // Weighted composite (five-component weighted average; weights sum to 1.0).
+  // TBD: empirical calibration needed — weight distribution is an engineering
+  // judgement, not sourced.
   const composite =
     statusWeight * 0.40 +
     gapScore * 0.15 +

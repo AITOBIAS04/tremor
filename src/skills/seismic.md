@@ -17,10 +17,11 @@ sequence modeling, and measurement uncertainty pricing.
 |--------|------|----------|------|---------|
 | USGS NEIC | Primary oracle | `earthquake.usgs.gov/fdsnws/event/1` | None | ~60s M4.5+ |
 | EMSC | Cross-validation | `seismicportal.eu/fdsnws/event/1` | None | ~120s |
-| IRIS DMC | Quality reference | `service.iris.edu/fdsnws/event/1` | None | ~180s |
+| IRIS DMC | Quality reference (planned for v0.2) | `service.iris.edu/fdsnws/event/1` | None | ~180s |
 
-All sources are free, always-on, machine-readable GeoJSON, and ground-truth
-verifiable. No API keys required.
+USGS and EMSC are fully integrated in v0.1. IRIS DMC integration is planned
+for v0.2 — not yet implemented. All sources are free, always-on, machine-readable
+GeoJSON, and ground-truth verifiable. No API keys required.
 
 ## Investigation Types
 
