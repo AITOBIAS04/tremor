@@ -23,13 +23,21 @@
  *
  * source: Båth (1965) — largest aftershock ≈ mainshock − 1.2
  *
- * TBD: approximate, calibrate in production — see
- * grimoires/loa/calibration/ and omori-backtest-protocol.md
+ * K values: backtest-derived empirical refit from Run 4 (2026-04-06)
+ *   subduction K: source: grimoires/loa/calibration/omori-backtest/k-refit-notes.md
+ *   transform K:  source: grimoires/loa/calibration/omori-backtest/k-refit-notes.md
+ *   intraplate K: PROVISIONAL — 2 sequences only, flag for human review before production merge
+ *                 source: grimoires/loa/calibration/omori-backtest/k-refit-notes.md
+ *   volcanic K:   TBD: empirical calibration needed (robustness-only, no clean calibration data)
+ *   default K:    TBD: empirical calibration needed (1 sequence, insufficient for refit)
+ * c, p, bath_delta: TBD — empirical calibration needed
+ * 0.75 scaling exponent: source: Reasenberg & Jones (1989)
+ *   magnitude-dependence: see k-refit-notes.md — follow-on sprint may be warranted
  */
 const REGIME_PARAMS = {
-  subduction: { K: 25, c: 0.05, p: 1.05, bath_delta: 1.1 },
-  transform:  { K: 15, c: 0.03, p: 1.10, bath_delta: 1.2 },
-  intraplate: { K: 8,  c: 0.08, p: 0.95, bath_delta: 1.3 },
+  subduction: { K: 0.220, c: 0.05, p: 1.05, bath_delta: 1.1 },
+  transform:  { K: 0.291, c: 0.03, p: 1.10, bath_delta: 1.2 },
+  intraplate: { K: 0.240, c: 0.08, p: 0.95, bath_delta: 1.3 },
   volcanic:   { K: 30, c: 0.02, p: 0.90, bath_delta: 1.0 },
   default:    { K: 18, c: 0.05, p: 1.00, bath_delta: 1.2 },
 };
