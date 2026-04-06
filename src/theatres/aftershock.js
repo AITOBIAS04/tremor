@@ -219,10 +219,24 @@ export function createAftershockCascade({
   const mainMag = mainshockBundle.payload.magnitude.value;
   const loc = mainshockBundle.payload.location;
 
-  if (mainMag < 6.0) return null;
+  if (mainMag < 6.0) return skipResult('magnitude_below_threshold', { mainMag });
 
   const now = Date.now();
   const inferredRegime = regime || inferRegime(loc.depth_km, loc.latitude, loc.longitude);
+
+  // Volcanic routing check (conservative policy): volcanic events skip
+  // Aftershock Cascade. Operator decides on Swarm Watch.
+  const routing = assessAftershockApplicability({
+    regime: inferredRegime, mag: mainMag,
+    lat: loc.latitude, lon: loc.longitude, depth_km: loc.depth_km,
+  });
+  if (!routing.omoriApplicable) {
+    console.warn(
+      `[TREMOR] Aftershock Cascade skipped — ${routing.reason}. ` +
+      `Swarm Watch recommended. Manual review: ${routing.manualReview}`,
+    );
+    return skipResult('volcanic_routing', routing);
+  }
   const params = REGIME_PARAMS[inferredRegime] || REGIME_PARAMS.default;
 
   // Compute initial bucket probabilities from Omori model
@@ -421,6 +435,51 @@ export function resolveAftershockCascade(theatre) {
       },
     ],
   };
+}
+
+/**
+ * Assess whether Omori aftershock modelling applies to an event.
+ * Routing policy: conservative — volcanic events skip Aftershock Cascade,
+ * operator decides on Swarm Watch.
+ *
+ * @param {Object} params
+ * @param {string} params.regime - output of inferRegime()
+ * @param {number} params.mag - mainshock magnitude
+ * @param {number} params.lat
+ * @param {number} params.lon
+ * @param {number} params.depth_km
+ * @returns {{ omoriApplicable: boolean, routeTo: string, manualReview: boolean, volcanicSubtype: string|null, reason: string }}
+ */
+export function assessAftershockApplicability({ regime, mag, lat, lon, depth_km }) {
+  if (regime === 'volcanic') {
+    // Tectonic-volcanic boundary heuristic: M≥6.0 in a volcanic regime is used as a conservative
+    // operational proxy for events that may have real mainshock-aftershock structure.
+    // This is a routing heuristic, not a geophysical classification claim.
+    // Flag for manual review rather than auto-routing.
+    const isBoundaryCandidate = mag >= 6.0;
+    return {
+      omoriApplicable: false,
+      routeTo: 'swarm_watch',
+      manualReview: isBoundaryCandidate,
+      volcanicSubtype: isBoundaryCandidate ? 'boundary' : 'swarm',
+      reason: isBoundaryCandidate
+        ? 'volcanic_boundary_candidate — Omori may apply, manual review required'
+        : 'volcanic_swarm_non_omori — magma-driven swarm, Omori not applicable',
+    };
+  }
+
+  return {
+    omoriApplicable: true,
+    routeTo: 'aftershock_cascade',
+    manualReview: false,
+    volcanicSubtype: null,
+    reason: 'standard_tectonic',
+  };
+}
+
+// Internal helper — not exported
+function skipResult(reason, detail = null) {
+  return { skipped: true, reason, detail };
 }
 
 export { BUCKETS, REGIME_PARAMS, omoriExpectedCount, countToBucketProbabilities, inferRegime };

@@ -41,6 +41,9 @@ export class TremorConstruct {
     // failed. Each entry: { theatre, reason, last_error, attempts }.
     this.pendingExports = [];
 
+    // Routing decisions (volcanic skip, etc.) — capped at 100 most recent.
+    this._routingDecisions = [];
+
     // Stats / observability
     this.stats = {
       polls: 0,
@@ -81,9 +84,10 @@ export class TremorConstruct {
    * Auto-called on M≥6.0 detections.
    */
   openAftershockCascade(params) {
-    const theatre = createAftershockCascade(params);
-    if (theatre) this.addTheatre(theatre);
-    return theatre;
+    const result = createAftershockCascade(params);
+    if (result?.skipped) return result;
+    if (result) this.addTheatre(result);
+    return result;
   }
 
   /**
@@ -241,11 +245,32 @@ export class TremorConstruct {
                  t.mainshock?.event_id === bundle.payload.event_id,
         );
         if (!existingCascade) {
-          const cascadeTheatre = createAftershockCascade({
+          const cascadeResult = createAftershockCascade({
             mainshockBundle: bundle,
           });
-          if (cascadeTheatre) {
-            this.addTheatre(cascadeTheatre);
+          if (cascadeResult?.skipped) {
+            // Record routing decision in machine-readable state.
+            // Conservative policy: do not auto-spawn Swarm Watch — log
+            // the recommendation and leave the decision to the operator.
+            const routeDecision = {
+              event_id: bundle.payload.event_id,
+              timestamp: new Date().toISOString(),
+              reason: cascadeResult.reason,
+              detail: cascadeResult.detail,
+              swarm_watch_recommended: cascadeResult.detail?.routeTo === 'swarm_watch',
+              manual_review_required: cascadeResult.detail?.manualReview ?? false,
+            };
+            this._routingDecisions.push(routeDecision);
+            // Retention: keep most recent 100 decisions only
+            if (this._routingDecisions.length > 100) {
+              this._routingDecisions = this._routingDecisions.slice(-100);
+            }
+            console.info(
+              `[TREMOR] Cascade skipped (${cascadeResult.reason}) — ` +
+              `Swarm Watch recommended for event ${bundle.payload.event_id}`,
+            );
+          } else if (cascadeResult) {
+            this.addTheatre(cascadeResult);
           }
         }
       }
@@ -467,6 +492,7 @@ export class TremorConstruct {
         attempts: p.attempts,
         last_error: p.last_error,
       })),
+      routing_decisions: this._routingDecisions,
     };
   }
 

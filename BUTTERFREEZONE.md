@@ -181,6 +181,11 @@ Directory structure:
 - **GitHub Actions**: CI/CD pipelines (test, lint, build)
 - **Zero new dependencies**: Hard constraint (maintained)
 
+## Volcanic Routing
+<!-- provenance: CODE-FACTUAL -->
+
+Volcanic events (regime: 'volcanic'): Aftershock Cascade not spawned — Omori-Utsu does not apply to magma-driven swarms. Routing policy: conservative. Swarm Watch recommended; operator decides. Boundary candidates (M≥6.0 volcanic) flagged for manual review. Routing decisions exposed in `getState().routing_decisions`.
+
 ## Calibration Status
 <!-- provenance: OPERATIONAL -->
 
