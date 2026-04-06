@@ -1,0 +1,102 @@
+{
+  "sequence_id": 9,
+  "label": "2008 Wells, Nevada",
+  "role": "inference",
+  "regime_assigned": "transform",
+  "regime_expected": "default or intraplate",
+  "regime_match": false,
+  "mainshock_event_id": "nn00234425",
+  "mainshock_magnitude": 5.9,
+  "mainshock_depth_km": 7.9,
+  "mainshock_utc": "2008-02-21T14:16:02.821Z",
+  "mainshock_location": "8 km ENE of Wells, Nevada",
+  "window_end_utc": "2008-02-24T14:16:02.821Z",
+  "omori_params": {
+    "K": 15,
+    "c": 0.03,
+    "p": 1.1,
+    "bath_delta": 1.2
+  },
+  "rupture_length_km": 7.1,
+  "match_radius_deg": 0.1,
+  "compute_method": "direct",
+  "bucket_probabilities": [
+    0,
+    0,
+    0,
+    0,
+    1
+  ],
+  "partial_windows": [
+    {
+      "window_hours": 6,
+      "projected": 201.7,
+      "actual": 3,
+      "relative_error": 66.233
+    },
+    {
+      "window_hours": 24,
+      "projected": 300.2,
+      "actual": 5,
+      "relative_error": 59.04
+    },
+    {
+      "window_hours": 72,
+      "projected": 372.6,
+      "actual": 8,
+      "relative_error": 45.575
+    }
+  ],
+  "projected_count": 372.6,
+  "actual_count": 8,
+  "projected_bucket": "21+",
+  "actual_bucket": "6-10",
+  "bucket_hit": false,
+  "relative_error": 45.575,
+  "log_error": 3.726,
+  "probability_score": 0.4,
+  "aftershock_truncated": false,
+  "aftershock_events": [
+    {
+      "id": "nn00288022",
+      "mag": 4.1,
+      "time": "2008-02-24T13:15:27.261Z"
+    },
+    {
+      "id": "nn00287968",
+      "mag": 4.3,
+      "time": "2008-02-23T23:32:40.987Z"
+    },
+    {
+      "id": "nn00235053",
+      "mag": 4.8,
+      "time": "2008-02-22T23:27:45.133Z"
+    },
+    {
+      "id": "nn00286225",
+      "mag": 4.3,
+      "time": "2008-02-22T01:50:05.347Z"
+    },
+    {
+      "id": "nn00234666",
+      "mag": 4.6,
+      "time": "2008-02-21T23:57:50.945Z"
+    },
+    {
+      "id": "nn00234461",
+      "mag": 4.1,
+      "time": "2008-02-21T15:34:25.466Z"
+    },
+    {
+      "id": "nn00517570",
+      "mag": 5.1,
+      "time": "2008-02-21T14:34:55.538Z"
+    },
+    {
+      "id": "nn00235990",
+      "mag": 4.6,
+      "time": "2008-02-21T14:20:51.446Z"
+    }
+  ],
+  "notes": ""
+}

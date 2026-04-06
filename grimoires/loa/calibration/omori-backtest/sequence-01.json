@@ -1,0 +1,212 @@
+{
+  "sequence_id": 1,
+  "label": "2011 Tōhoku",
+  "role": "regime-fit",
+  "regime_assigned": "subduction",
+  "regime_expected": "subduction",
+  "regime_match": true,
+  "mainshock_event_id": "official20110311054624120_30",
+  "mainshock_magnitude": 9.1,
+  "mainshock_depth_km": 29,
+  "mainshock_utc": "2011-03-11T05:46:24.120Z",
+  "mainshock_location": "2011 Great Tohoku Earthquake, Japan",
+  "window_end_utc": "2011-03-14T05:46:24.120Z",
+  "omori_params": {
+    "K": 25,
+    "c": 0.05,
+    "p": 1.05,
+    "bath_delta": 1.1
+  },
+  "rupture_length_km": 1145.5,
+  "match_radius_deg": 15.48,
+  "compute_method": "createAftershockCascade",
+  "bucket_probabilities": [
+    0,
+    0,
+    0,
+    0,
+    1
+  ],
+  "partial_windows": [
+    {
+      "window_hours": 6,
+      "projected": 59151.1,
+      "actual": 183,
+      "relative_error": 322.23
+    },
+    {
+      "window_hours": 24,
+      "projected": 97470.8,
+      "actual": 672,
+      "relative_error": 144.046
+    },
+    {
+      "window_hours": 72,
+      "projected": 128249.8,
+      "actual": 1422,
+      "relative_error": 89.19
+    }
+  ],
+  "projected_count": 128249.8,
+  "actual_count": 1422,
+  "projected_bucket": "21+",
+  "actual_bucket": "21+",
+  "bucket_hit": true,
+  "relative_error": 89.19,
+  "log_error": 4.501,
+  "probability_score": 0,
+  "aftershock_truncated": false,
+  "aftershock_events": [
+    {
+      "id": "usp000hx32",
+      "mag": 4.8,
+      "time": "2011-03-14T05:42:14.640Z"
+    },
+    {
+      "id": "usp000hx31",
+      "mag": 4.2,
+      "time": "2011-03-14T05:37:18.270Z"
+    },
+    {
+      "id": "usp000hx30",
+      "mag": 4.7,
+      "time": "2011-03-14T05:27:12.010Z"
+    },
+    {
+      "id": "usp000hx2z",
+      "mag": 4.4,
+      "time": "2011-03-14T05:24:03.380Z"
+    },
+    {
+      "id": "usp000hx2y",
+      "mag": 4.6,
+      "time": "2011-03-14T05:23:01.260Z"
+    },
+    {
+      "id": "usp000hx2x",
+      "mag": 4.8,
+      "time": "2011-03-14T05:19:02.770Z"
+    },
+    {
+      "id": "usp000hx2w",
+      "mag": 4.3,
+      "time": "2011-03-14T05:14:26.300Z"
+    },
+    {
+      "id": "usp000hx2v",
+      "mag": 4.3,
+      "time": "2011-03-14T05:11:09.470Z"
+    },
+    {
+      "id": "usp000hx2u",
+      "mag": 4.5,
+      "time": "2011-03-14T05:09:39.920Z"
+    },
+    {
+      "id": "usp000hx2t",
+      "mag": 4.5,
+      "time": "2011-03-14T04:59:41.950Z"
+    },
+    {
+      "id": "usp000hx2s",
+      "mag": 5,
+      "time": "2011-03-14T04:57:54.330Z"
+    },
+    {
+      "id": "usp000hx2r",
+      "mag": 4.7,
+      "time": "2011-03-14T04:56:22.890Z"
+    },
+    {
+      "id": "usp000hx2q",
+      "mag": 4.9,
+      "time": "2011-03-14T04:48:23.470Z"
+    },
+    {
+      "id": "usp000hx2p",
+      "mag": 4.8,
+      "time": "2011-03-14T04:45:37.800Z"
+    },
+    {
+      "id": "usp000hx2n",
+      "mag": 4.3,
+      "time": "2011-03-14T04:44:10.820Z"
+    },
+    {
+      "id": "usp000hx2m",
+      "mag": 4.2,
+      "time": "2011-03-14T04:38:02.710Z"
+    },
+    {
+      "id": "usp000hx2k",
+      "mag": 4.4,
+      "time": "2011-03-14T04:34:44.050Z"
+    },
+    {
+      "id": "usp000hx2j",
+      "mag": 4.5,
+      "time": "2011-03-14T04:26:18.620Z"
+    },
+    {
+      "id": "usp000hx2h",
+      "mag": 4.5,
+      "time": "2011-03-14T04:20:05.820Z"
+    },
+    {
+      "id": "usp000hx2f",
+      "mag": 4.5,
+      "time": "2011-03-14T03:56:40.090Z"
+    },
+    {
+      "id": "usp000hx2e",
+      "mag": 4.3,
+      "time": "2011-03-14T03:50:03.010Z"
+    },
+    {
+      "id": "usp000hx2d",
+      "mag": 4.6,
+      "time": "2011-03-14T03:39:30.280Z"
+    },
+    {
+      "id": "usp000hx2c",
+      "mag": 4.6,
+      "time": "2011-03-14T03:24:42.870Z"
+    },
+    {
+      "id": "usp000hx2b",
+      "mag": 5.2,
+      "time": "2011-03-14T03:20:41.720Z"
+    },
+    {
+      "id": "usp000hx2a",
+      "mag": 5.2,
+      "time": "2011-03-14T03:18:46.290Z"
+    },
+    {
+      "id": "usp000hx28",
+      "mag": 5.4,
+      "time": "2011-03-14T03:15:50.490Z"
+    },
+    {
+      "id": "usp000hx27",
+      "mag": 4.9,
+      "time": "2011-03-14T03:10:07.860Z"
+    },
+    {
+      "id": "usp000hx26",
+      "mag": 4.8,
+      "time": "2011-03-14T03:09:55.410Z"
+    },
+    {
+      "id": "usp000hx25",
+      "mag": 4.6,
+      "time": "2011-03-14T03:02:20.960Z"
+    },
+    {
+      "id": "usp000hx24",
+      "mag": 4.5,
+      "time": "2011-03-14T03:01:47.190Z"
+    }
+  ],
+  "notes": ""
+}
