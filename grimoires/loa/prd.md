@@ -57,7 +57,7 @@ Ground truth first. The prediction market is the factory; calibrated Brier-score
 
 ## Quality & Reliability
 
-[GROUNDED] 48 tests across 16 suites (test/tremor.test.js, node:test).
+[GROUNDED] 87 tests across 26 suites (test/tremor.test.js, test/post-audit.test.js, test/geofon.test.js; node:test).
 [GROUNDED] Zero external dependencies (package.json); Node.js 20+ only.
 [GROUNDED] All integrations against public, free APIs (USGS, EMSC).
 

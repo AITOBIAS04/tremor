@@ -71,8 +71,8 @@ const certs = tremor.getCertificates();
 This release adds empirical calibration with comprehensive safety fixes and governance:
 
 - **5 critical safety fixes**: Race condition prevention, NaN guards, atomic exports, input validation, poll resilience
-- **Comprehensive test suite**: 70 tests across 22 suites (48 baseline + 22 regression tests proving fixes)
-- **All tests passing**: 70/70 ✓
+- **Comprehensive test suite**: 87 tests across 26 suites
+- **All tests passing**: 87/87 ✓
 - **Governance structure**: Security policy, contribution guidelines, GitHub Actions CI
 - **Zero external dependencies**: Node.js 20+ only
 
@@ -80,7 +80,7 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed changes, [SECURITY.md](SECURITY.md
 
 ## Verification
 
-- **70/70 tests passing** (48 baseline + 22 regression)
+- **87/87 tests passing**
 - **GitHub Actions CI** on push and PR
 - **Zero external dependencies**
 - **AGPL-3.0 licensed**

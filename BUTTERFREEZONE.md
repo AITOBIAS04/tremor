@@ -161,13 +161,13 @@ Directory structure:
 | `src/rlmf/` | 1 | RLMF training data export (Brier scoring, temporal analysis, certificate generation) |
 | `src/skills/` | 1 | Construct specialization profile |
 | `spec/` | 1 | Machine-readable construct specification |
-| `test/` | 2 | Baseline + regression test suites (70 tests, 22 suites, node:test) |
+| `test/` | 3 | Baseline + regression + GEOFON test suites (87 tests, 26 suites, node:test) |
 
 ## Verification
 <!-- provenance: CODE-FACTUAL -->
 
 - Trust Level: **L2 — CI Verified**
-- 70 tests across 22 suites (48 baseline + 22 regression)
+- 87 tests across 26 suites
 - CI/CD: GitHub Actions (test, lint, build on push/PR)
 - Security: SECURITY.md present
 - Governance: CONTRIBUTING.md, CHANGELOG.md present
@@ -235,7 +235,7 @@ sections:
   architecture: pipeline-oracle-processor-theatre-rlmf
   interfaces: construct-api-theatre-templates-osint-feeds
   module_map: 7-modules
-  verification: 70-tests-22-suites-ci-verified
+  verification: 87-tests-26-suites-ci-verified
   culture: echelon-ground-truth-first
   quick_start: zero-deps-node20
 -->

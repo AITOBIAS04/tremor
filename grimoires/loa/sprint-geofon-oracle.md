@@ -322,12 +322,13 @@ Update provenance tag on the section to remain `CODE-FACTUAL`.
 
 ---
 
-## Known Issue to Flag (do not fix — document only)
+## Known Issue (RESOLVED)
 
-The `evidenceClass = 'cross_validated'` upgrade in `src/processor/bundles.js:70–77` reads
+~~The `evidenceClass = 'cross_validated'` upgrade in `src/processor/bundles.js:70–77` reads
 `config.crossValidation` at bundle-build time, but cross-validation calls happen after
-`buildBundle` returns. The upgrade path is currently unreachable. Do not fix in this sprint.
-Add a note under **Known Limitations** in the implementation report. Candidate for Sprint B.
+`buildBundle` returns. The upgrade path was unreachable.~~
+
+Fixed in `639e976`: upgrade logic added in `src/index.js` after cross-validation completes.
 
 ---
 

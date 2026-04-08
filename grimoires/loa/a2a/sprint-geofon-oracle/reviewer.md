@@ -92,7 +92,7 @@ Individual source results are nested under `emsc` and `geofon` keys. The top-lev
 
 ## Known Limitations
 
-- **`evidenceClass = 'cross_validated'` upgrade path unreachable**: The upgrade in `src/processor/bundles.js:70–77` reads `config.crossValidation` at bundle-build time, but cross-validation calls happen after `buildBundle` returns. The upgrade path is currently unreachable for both EMSC and GEOFON. Do not fix in this sprint — candidate for Sprint B.
+- ~~**`evidenceClass = 'cross_validated'` upgrade path unreachable**~~ — **RESOLVED** in `639e976`. Upgrade logic added in `src/index.js` after cross-validation completes.
 - **GEOFON 204 on narrow time windows**: GEOFON returns HTTP 204 (no content) when no events match the query window. The oracle handles this correctly (non-200 → `null`), but it means GEOFON cross-validation will show `null` for events in quiet periods. This is correct behavior.
 
 ---
